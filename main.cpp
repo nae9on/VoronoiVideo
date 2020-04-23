@@ -11,8 +11,8 @@
 int main(){
 
     // create background image
-    // const int rows{400}, cols{600};
-    // canvas_image cimage(rows,cols);
+    //const int rows{400}, cols{800};
+    //canvas_image cimage(rows,cols);
     canvas_image cimage("./images/parrot.jpg");
 
     // create voronoi image

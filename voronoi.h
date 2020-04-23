@@ -27,18 +27,18 @@ using AT = CGAL::Delaunay_triangulation_adaptation_traits_2<DT>;
 using AP = CGAL::Delaunay_triangulation_caching_degeneracy_removal_policy_2<DT>;
 using VD = CGAL::Voronoi_diagram_2<DT,AT,AP>;
 
-struct cropped_voronoi_from_delaunay{
+struct crop_segment{
 
-    cropped_voronoi_from_delaunay(const Iso_rectangle_2& bbox_):bbox(bbox_){}
+    crop_segment(const Iso_rectangle_2& bbox_):bbox(bbox_){}
 
     Iso_rectangle_2 bbox;
-    std::list<Segment_2> cropped_voronoi_segment;
+    std::list<Segment_2> cropped_segments;
 
     template<class RSL>
     void crop_and_extract_segment(const RSL& rsl){
         CGAL::Object obj = CGAL::intersection(rsl,bbox);
         const Segment_2* s=CGAL::object_cast<Segment_2>(&obj);
-        if(s) cropped_voronoi_segment.push_back(*s);
+        if(s) cropped_segments.push_back(*s);
         }
 
     void operator<<(const Ray_2& ray)    {crop_and_extract_segment(ray);}
@@ -54,13 +54,15 @@ public:
     std::vector<Point_2>& get_points();
     std::vector<Point_2> add_random_points(size_t N);
     void print_voronoi_edges() const;
-    std::list<Segment_2>& get_voronoi_edges();
+    const std::list<Segment_2>& get_voronoi_edges() const;
 private:
     int xmax;
     int ymax;
-    DT tmesh;
-    VD vmesh;
-    cropped_voronoi_from_delaunay vstruct;
+    double extpercent = 10; // random points are generated in an extended domain
+    DT dtmesh; // Delaunay triangulation
+    VD vdmesh; // Voronoi diagram
+    bool dt_or_vd = false; // true for DT and false for VD
+    crop_segment cseg;
     boost_real rgen;
 };
 
