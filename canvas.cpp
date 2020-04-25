@@ -27,7 +27,7 @@ canvas::canvas(const std::string& str, const std::string& wn/*="Default"*/){
         inVid.open(str);
         if (!inVid.isOpened())
         {
-            std::cout<<"Video writer could not be initialized for file: "<<str<<std::endl;
+            std::cout<<"Video reader could not be initialized for file: "<<str<<std::endl;
             std::terminate();
         }
 
@@ -37,9 +37,20 @@ canvas::canvas(const std::string& str, const std::string& wn/*="Default"*/){
         std::cout<<"Video frame: Width="<<inSize.width<<"  Height="<<inSize.height
                  <<" and #Frames="<<inVid.get(cv::CAP_PROP_FRAME_COUNT)<<std::endl;
 
+        int codec_type = static_cast<int>(inVid.get(cv::CAP_PROP_FOURCC));
+
         rows = inSize.height;
         cols = inSize.width;
         isVideo = true;
+
+        // initialize video writer
+        std::string outFilename{"./data/out.avi"};
+        outVid.open(outFilename, codec_type, inVid.get(cv::CAP_PROP_FPS), inSize, true);
+        if (!outVid.isOpened())
+        {
+            std::cout<<"Video writer could not be initialized for file: "<<outFilename<<std::endl;
+            std::terminate();
+        }
     }
     else
     {
@@ -50,8 +61,39 @@ canvas::canvas(const std::string& str, const std::string& wn/*="Default"*/){
     window_name = wn;
 }
 
-void canvas::show(int delay/*=0*/){
-    cv::namedWindow(window_name, cv::WINDOW_AUTOSIZE);
+void canvas::show(int delay/*=0*/) const{
     cv::imshow(window_name, image);
     cv::waitKey(delay); // delay in ms
+}
+
+void canvas::act(){
+    if(isVideo==false)
+    {
+        actptr->execute(image);
+        writeImage();
+        cv::namedWindow(window_name, cv::WINDOW_AUTOSIZE);
+        show(0);
+    }else{
+        int frameNum{-1};
+        int delay = 1000/FPS;
+        cv::namedWindow(window_name, cv::WINDOW_AUTOSIZE);
+        while(1)
+        {
+            inVid >> image;
+            if (image.empty()) {break;}
+            ++frameNum;
+            if(frameNum%10==0) std::cout<<"Frame: " <<frameNum<<std::endl;
+            actptr->execute(image);
+            writeVideo();
+            show(delay);
+        }
+    }
+}
+
+void canvas::writeImage(){
+    cv::imwrite("./images/out.jpg", image); // write image
+}
+
+void canvas::writeVideo(){
+    outVid << image;
 }

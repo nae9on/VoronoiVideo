@@ -16,6 +16,7 @@
 #include <CGAL/Voronoi_diagram_2.h>
 #include <CGAL/Delaunay_triangulation_adaptation_traits_2.h>
 #include <CGAL/Delaunay_triangulation_adaptation_policies_2.h>
+
 #include <vector>
 
 using K = CGAL::Exact_predicates_inexact_constructions_kernel;
@@ -49,16 +50,17 @@ struct crop_segment{
 };
 
 class voronoi_image: public action{
+    using imgType = cv::Mat_<cv::Vec3b>;
 public:
     voronoi_image() = delete;
     voronoi_image(int xmax_, int ymax_);
-    void add_points(const std::vector<Point_2>& points);
     void add_random_points(size_t N);
+    void insert_points();
     const std::vector<Point_2>& get_points() const;
     const std::list<Segment_2>& get_voronoi_edges() const;
-    void addCircle(cv::Mat_<cv::Vec3b>& image, int x, int y);
-    void addLine(cv::Mat_<cv::Vec3b>& image, int x1, int y1, int x2, int y2);
-    void execute(cv::Mat_<cv::Vec3b>& image) override;
+    void addCircle(imgType& image, int x, int y);
+    void addLine(imgType& image, int x1, int y1, int x2, int y2);
+    void execute(imgType& image) override;
     void print_voronoi_edges() const;
 private:
     int xmax;

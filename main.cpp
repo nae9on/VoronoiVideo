@@ -8,11 +8,14 @@
 #include "canvas.h"
 #include "voronoi.h"
 
+#include <string>
+
 int main(){
 
     // create background image
-    //canvas cimage("./images/parrot.jpg");
-    canvas cimage("./data/in.avi");
+    //std::string filename{"./images/parrot.jpg"};
+    std::string filename{"./data/in.avi"};
+    canvas cimage(filename);
 
     // create voronoi image
     voronoi_image vimage(cimage.get_cols(),cimage.get_rows());

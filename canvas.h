@@ -16,43 +16,30 @@
 #include <opencv2/imgproc.hpp>
 
 class canvas{
+    using imgType = cv::Mat_<cv::Vec3b>;
 public:
     canvas() = delete;
     canvas(int rows, int cols, const std::string& wn="Default");
     canvas(const std::string& str, const std::string& wn="Default");
-    int get_rows(){return rows;}
-    int get_cols(){return cols;}
-    void show(int delay=0);
-    void setAction(action* ac_){
-        ac = ac_;
+    int get_rows() const {return rows;}
+    int get_cols()const {return cols;}
+    void show(int delay=0) const;
+    void setAction(action* actptr_){
+        actptr = actptr_;
     }
-    void act(){
-        if(isVideo==false)
-        {
-            ac->execute(image);
-            show(0);
-        }else{
-            int frameNum{-1};
-            int delay{33};
-            for(;;)
-            {
-                inVid >> image;
-                if (image.empty()){break;}
-                ++frameNum;
-                if(frameNum%10==0) std::cout<<"Frame: " <<frameNum<<std::endl;
-                ac->execute(image);
-                show(delay);
-            }
-        }
-    }
+    void act();
+    void writeImage();
+    void writeVideo();
 private:
     int rows;
     int cols;
-    bool isVideo = false;
-    cv::Mat_<cv::Vec3b> image;
+    int FPS = 30;
+    bool isVideo{false};
+    imgType image;
     cv::VideoCapture inVid;
+    cv::VideoWriter outVid;
     std::string window_name;
-    action* ac = nullptr;
+    action* actptr{nullptr};
 };
 
 #endif /* CANVAS_H_ */

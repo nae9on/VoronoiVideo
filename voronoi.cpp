@@ -15,7 +15,16 @@ voronoi_image::voronoi_image(int xmax_, int ymax_):
     rgen(0-extpercent/100,1+extpercent/100){
     }
 
-void voronoi_image::add_points(const std::vector<Point_2>& points){
+
+void voronoi_image::add_random_points(size_t N){
+    for(size_t i=0; i<N; ++i){
+        //points.push_back(Point_2(rgen()*xmax,rgen()*ymax));
+        points.emplace_back(rgen()*xmax,rgen()*ymax); // better
+    }
+    insert_points();
+}
+
+void voronoi_image::insert_points(){
 
     if(dt_or_vd){
 
@@ -39,14 +48,6 @@ void voronoi_image::add_points(const std::vector<Point_2>& points){
     }
 }
 
-void voronoi_image::add_random_points(size_t N){
-    for(size_t i=0; i<N; ++i){
-        //points.push_back(Point_2(rgen()*xmax,rgen()*ymax));
-        points.emplace_back(rgen()*xmax,rgen()*ymax); // better
-    }
-    add_points(points);
-}
-
 const std::vector<Point_2>& voronoi_image::get_points() const{
     return points;
 }
@@ -55,8 +56,7 @@ const std::list<Segment_2>& voronoi_image::get_voronoi_edges() const{
     return cseg.cropped_segments;
 }
 
-
-void voronoi_image::addCircle(cv::Mat_<cv::Vec3b>& image, int x, int y)
+void voronoi_image::addCircle(imgType& image, int x, int y)
 {
     cv::Point center(x,ymax-y);
     int radius{2};
@@ -66,7 +66,7 @@ void voronoi_image::addCircle(cv::Mat_<cv::Vec3b>& image, int x, int y)
     cv::circle(image, center, radius, color, cv::FILLED, lineType);
 }
 
-void voronoi_image::addLine(cv::Mat_<cv::Vec3b>& image, int x1, int y1, int x2, int y2)
+void voronoi_image::addLine(imgType& image, int x1, int y1, int x2, int y2)
 {
     cv::Point start(x1,ymax-y1);
     cv::Point end(x2,ymax-y2);
@@ -77,9 +77,8 @@ void voronoi_image::addLine(cv::Mat_<cv::Vec3b>& image, int x1, int y1, int x2, 
     cv::line(image, start, end, color, thickness, lineType);
 }
 
-void voronoi_image::execute(cv::Mat_<cv::Vec3b>& image){
+void voronoi_image::execute(imgType& image){
 
-    const std::vector<Point_2>& points = get_points();
     const std::list<Segment_2>& edges = get_voronoi_edges();
 
     for(const auto& elem:points){
