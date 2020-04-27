@@ -56,6 +56,7 @@ canvas::canvas(const std::string& str, const std::string& wn/*="Default"*/){
     {
         rows = image.rows;
         cols = image.cols;
+        std::cout<<"Image frame: Width="<<cols<<"  Height="<<rows<<std::endl;
     }
 
     window_name = wn;

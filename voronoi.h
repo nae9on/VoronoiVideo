@@ -16,6 +16,7 @@
 #include <CGAL/Voronoi_diagram_2.h>
 #include <CGAL/Delaunay_triangulation_adaptation_traits_2.h>
 #include <CGAL/Delaunay_triangulation_adaptation_policies_2.h>
+#include <CGAL/centroid.h>
 
 #include <vector>
 
@@ -50,26 +51,43 @@ struct crop_segment{
 };
 
 class voronoi_image: public action{
+
     using imgType = cv::Mat_<cv::Vec3b>;
+    using centroidIndexPair = std::pair<Point_2,int>;
+    using centroidIndexPairVec = std::vector<centroidIndexPair>;
+
 public:
+
     voronoi_image() = delete;
     voronoi_image(int xmax_, int ymax_);
-    void add_random_points(size_t N);
-    void insert_points();
-    const std::vector<Point_2>& get_points() const;
-    const std::list<Segment_2>& get_voronoi_edges() const;
-    void addCircle(imgType& image, int x, int y);
+
+    // kernel functions
+    void add_random_sites(size_t N);
+    void insert_sites();
+    void update_centroidIndexPairVec();
+    void assignPixelsToFaces();
+
+    // image manipulation functions
+    void addCircle(imgType& image, int x, int y, cv::Scalar color);
     void addLine(imgType& image, int x1, int y1, int x2, int y2);
+    void updatePixels(imgType& image);
     void execute(imgType& image) override;
-    void print_voronoi_edges() const;
+
+    // getter functions
+    const std::vector<Point_2>& get_sites() const;
+    const std::list<Segment_2>& get_voronoi_edges() const;
+
+    // print functions
+    void print_cropped_segments() const;
+    void print_voronoi_diagram_info() const;
 private:
     int xmax;
     int ymax;
-    double extpercent = 10; // random points are generated in an extended domain
-    DT dtmesh; // Delaunay triangulation
+    double extpercent = 0; // random sites are generated in an extended domain
     VD vdmesh; // Voronoi diagram
-    bool dt_or_vd = false; // true for DT and false for VD
-    std::vector<Point_2> points;
+    std::vector<Point_2> sites;
+    centroidIndexPairVec cindex;
+    std::vector<std::vector<std::pair<int,int>>> facelist;
     crop_segment cseg;
     boost_real rgen;
 };
