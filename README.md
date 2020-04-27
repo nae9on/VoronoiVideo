@@ -12,6 +12,16 @@ In this project, a 2D [Voronoi mesh](https://en.wikipedia.org/wiki/Voronoi_diagr
 
 [Boost.Random](https://www.boost.org/doc/libs/1_72_0/doc/html/boost_random.html)
 
+# Usage
+
+In main.cpp set the path to the image file (or video file) as
+
+```c++
+std::string filename{"./data/in.jpg"};
+```
+
+The output image (or video) is written to "./data/out.jpg" (or "./data/out.avi")
+    
 # Other information
 
 The build is tested on Windows with [MinGW distribution](https://nuwen.net/mingw.html) containing GCC 8.2.0 and Boost 1.69.0. Version CGAL-5.0.2 and OpenCV 4.20 are used during build. The project is organised following a [Strategy design pattern](https://en.wikipedia.org/wiki/Strategy_pattern).
