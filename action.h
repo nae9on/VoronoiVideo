@@ -10,6 +10,7 @@
 
 #include <opencv2/opencv.hpp>
 
+// interface class
 class action{
 public:
     action() = default;

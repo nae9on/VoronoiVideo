@@ -24,8 +24,8 @@ public:
     int get_rows() const {return rows;}
     int get_cols()const {return cols;}
     void show(int delay=0) const;
-    void setAction(action* actptr_){
-        actptr = actptr_;
+    void setActor(action* actor_){
+        actor = actor_;
     }
     void act();
     void writeImage();
@@ -39,7 +39,7 @@ private:
     cv::VideoCapture inVid;
     cv::VideoWriter outVid;
     std::string window_name;
-    action* actptr{nullptr};
+    action* actor{nullptr};
 };
 
 #endif /* CANVAS_H_ */

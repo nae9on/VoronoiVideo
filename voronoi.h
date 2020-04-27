@@ -80,6 +80,7 @@ public:
     // print functions
     void print_cropped_segments() const;
     void print_voronoi_diagram_info() const;
+
 private:
     int xmax;
     int ymax;

@@ -6,7 +6,6 @@
  */
 
 #include "voronoi.h"
-#include <vector>
 #include <algorithm>
 #include <cassert>
 #include <valarray>
@@ -15,9 +14,7 @@ voronoi_image::voronoi_image(int xmax_, int ymax_):
     xmax{xmax_},
     ymax{ymax_},
     cseg(Iso_rectangle_2(0,0,xmax,ymax)),
-    rgen(0-extpercent/100,1+extpercent/100){
-    }
-
+    rgen(0-extpercent/100,1+extpercent/100){}
 
 void voronoi_image::add_random_sites(size_t N){
     for(size_t i=0; i<N; ++i){
@@ -30,7 +27,7 @@ void voronoi_image::add_random_sites(size_t N){
 void voronoi_image::insert_sites(){
 
     // Create Voronoi diagram
-    vdmesh.insert(sites.begin(),sites.end());
+    vdmesh.insert(sites.cbegin(),sites.cend());
 
     // Crop Voronoi edges for display purpose only
     for(auto it=vdmesh.edges_begin(); it!=vdmesh.edges_end(); ++it){
@@ -38,6 +35,8 @@ void voronoi_image::insert_sites(){
             cseg<<Segment_2(it->source()->point(),it->target()->point());
         }
     }
+
+    assert(vdmesh.number_of_faces()==sites.size());
 
     print_voronoi_diagram_info();
 
@@ -47,7 +46,7 @@ void voronoi_image::insert_sites(){
 }
 
 void voronoi_image::update_centroidIndexPairVec(){
-    int index {0};
+    size_t index{0};
     for (const auto &p : sites) {
         VD::Locate_result lr = vdmesh.locate(p);
         if (VD::Face_handle *f = boost::get<VD::Face_handle>(&lr)) {
@@ -89,15 +88,18 @@ void voronoi_image::assignPixelsToFaces(){
             if (VD::Face_handle *f = boost::get<VD::Face_handle>(&lr)) {
 
                 if (!(*f)->is_unbounded()) {
+
                     VD::Ccb_halfedge_circulator ec_start = (*f)->ccb();
                     VD::Ccb_halfedge_circulator ec = ec_start;
                     std::vector<Point_2> vec;
                     do {
                         vec.push_back(ec->source()->point());
                     } while (++ec != ec_start);
+
                     Point_2 c = CGAL::centroid(vec.cbegin(), vec.cend());
 
-                    auto lambda = [](const centroidIndexPair& p1, const centroidIndexPair& p2){
+                    auto lambda = [](const centroidIndexPair& p1,
+                            const centroidIndexPair& p2){
                         if(p1.first.y()==p2.first.y())
                             return p1.first.x()<p2.first.x();
                         else
@@ -188,21 +190,20 @@ void voronoi_image::updatePixels(imgType& image) {
 
 void voronoi_image::execute(imgType& image){
 
-    const std::list<Segment_2>& edges = get_voronoi_edges();
-
     // Add sites
     /*for(const auto& p:sites){
         addCircle(image, p.x(), p.y());
-    }
+    }*/
 
     // Add edges
+    /*const std::list<Segment_2>& edges = get_voronoi_edges();
     for(const auto& e:edges){
         addLine(image, e.source().x(), e.source().y(),
                        e.target().x(), e.target().y());
-    }
+    }*/
 
     // Add centroids of bounded faces
-    for(const auto& p:cindex){
+    /*for(const auto& p:cindex){
         addCircle(image, p.first.x(), p.first.y(), cv::Scalar(0, 0, 255));
     }*/
 

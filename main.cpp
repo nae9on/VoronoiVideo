@@ -21,7 +21,7 @@ int main(){
     voronoi_image vimage(cimage.get_cols(),cimage.get_rows());
     vimage.add_random_sites(10000);
 
-    cimage.setAction(&vimage);
+    cimage.setActor(&vimage);
 
     cimage.act();
 

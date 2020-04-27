@@ -70,7 +70,8 @@ void canvas::show(int delay/*=0*/) const{
 void canvas::act(){
     if(isVideo==false)
     {
-        actptr->execute(image);
+        // delegate work to the actor
+        actor->execute(image);
         writeImage();
         cv::namedWindow(window_name, cv::WINDOW_AUTOSIZE);
         show(0);
@@ -84,7 +85,8 @@ void canvas::act(){
             if (image.empty()) {break;}
             ++frameNum;
             if(frameNum%10==0) std::cout<<"Frame: " <<frameNum<<std::endl;
-            actptr->execute(image);
+            // delegate work to the actor
+            actor->execute(image);
             writeVideo();
             show(delay);
         }
