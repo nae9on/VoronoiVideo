@@ -13,7 +13,7 @@
 int main(){
 
     // create background image
-    //std::string filename{"./images/cheetah.jpg"};
+    //std::string filename{"./data/in.jpg"};
     std::string filename{"./data/in.avi"};
     canvas cimage(filename);
 

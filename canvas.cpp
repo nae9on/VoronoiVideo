@@ -94,7 +94,7 @@ void canvas::act(bool viewon){
 }
 
 void canvas::writeImage(){
-    cv::imwrite("./images/out.jpg", image); // write image
+    cv::imwrite("./data/out.jpg", image); // write image
 }
 
 void canvas::writeVideo(){
