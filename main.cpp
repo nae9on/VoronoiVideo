@@ -23,7 +23,7 @@ int main(){
 
     cimage.setActor(&vimage);
 
-    cimage.act();
+    cimage.act(true);
 
     return 0;
 }

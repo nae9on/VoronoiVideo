@@ -67,7 +67,7 @@ void canvas::show(int delay/*=0*/) const{
     cv::waitKey(delay); // delay in ms
 }
 
-void canvas::act(){
+void canvas::act(bool viewon){
     if(isVideo==false)
     {
         // delegate work to the actor
@@ -78,7 +78,7 @@ void canvas::act(){
     }else{
         int frameNum{-1};
         int delay = 1000/FPS;
-        cv::namedWindow(window_name, cv::WINDOW_AUTOSIZE);
+        if(viewon) cv::namedWindow(window_name, cv::WINDOW_AUTOSIZE);
         while(1)
         {
             inVid >> image;
@@ -88,7 +88,7 @@ void canvas::act(){
             // delegate work to the actor
             actor->execute(image);
             writeVideo();
-            show(delay);
+            if(viewon) show(delay);
         }
     }
 }

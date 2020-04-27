@@ -27,7 +27,7 @@ public:
     void setActor(action* actor_){
         actor = actor_;
     }
-    void act();
+    void act(bool viewon);
     void writeImage();
     void writeVideo();
 private:
