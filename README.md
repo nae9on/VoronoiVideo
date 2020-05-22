@@ -14,7 +14,7 @@ In this project, a 2D [Voronoi mesh](https://en.wikipedia.org/wiki/Voronoi_diagr
 
 # Usage
 
-In main.cpp set the path to the image file (or video file) as
+In main.cpp set the path to the image file (or video file) as follows
 
 ```c++
 std::string filename{"./data/in.jpg"};
